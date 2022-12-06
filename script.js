@@ -1,7 +1,7 @@
 $(function () {
     initTimeClases();
     initSaveButtons();
-  
+    initSavedEvents();
 });
 
 
@@ -23,6 +23,7 @@ const initTimeClases = () => {
     })
 }
 
+
 const initSaveButtons = () => {
     const timeBlocks = $("#container").children();
 
@@ -32,6 +33,16 @@ const initSaveButtons = () => {
         const textValue = parent.children("textarea").val();
         saveEventToLocalStorage(textValue, id);
       });
+}
+
+const initSavedEvents = () => {
+    const timeBlocks = $("#container").children();
+
+    timeBlocks.children("textarea").val((index) => {
+        const id = timeBlocks[index].id;
+        return getEventFromLocalStorage(id);
+      });
+    
 }
 
 const saveEventToLocalStorage = (data, id) => {
@@ -55,4 +66,18 @@ const saveEventToLocalStorage = (data, id) => {
       newData = [{ data, id }];
     }
     localStorage.setItem("data", JSON.stringify(newData));
+  };
+
+  const getEventFromLocalStorage = (id) => {
+    const ls = JSON.parse(localStorage.getItem("data"));
+    let data = "";
+    if (ls) {
+      const find = ls.filter((item) => {
+        return item.id === id;
+      });
+      if (find.length) {
+        data = find[0].data;
+      }
+    }
+    return data;
   };
