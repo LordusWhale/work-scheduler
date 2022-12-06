@@ -9,4 +9,4 @@ A link to the deployed application can be found [here](https://lorduswhale.githu
 
 ### Screenshot of deployed application
 
-![deployed application screenshot](./deployedapp.png)
+![deployed application screenshot](./assets/images/deployedapp.png)
