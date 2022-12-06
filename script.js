@@ -1,10 +1,13 @@
 $(function () {
+    // Default start and end times (9am, 6pm)
     let start = 9;
     let end = 18;
-  
+
+    //Select menus for changing work times
     const startTime = $('#select1');
     const endTime = $('#select2');
-  
+
+    //Setting start and end variables if there are saved times
     const savedTimes = getTimesFromLocalStorage();
     if (savedTimes){
       startTime.val(savedTimes.start);
@@ -12,18 +15,22 @@ $(function () {
       start = savedTimes.start;
       end = savedTimes.end;
     }
-  
+
+    // Change start and end times then updating the time blocks
     const onTimeChange = () => {
       const start = parseInt(startTime.val());
       const end = parseInt(endTime.val());
       if (start > end) return;
+      // Saving times to be the same on page load
       saveTimesToLocalStorage(start, end)
       init(start, end);
     }
     startTime.change(onTimeChange);
     endTime.change(onTimeChange)
-
+    // Showing current date 
     $("#currentDay").text(`${dayjs().format("dddd, MMMM Do")}`);
+
+    // Initialising time blocks and functionality
     init(start, end);
 });
 
@@ -39,9 +46,11 @@ function init(startTime, endTime) {
 
 
 function initTimeDivs(start, end) {
+    // Created time blocks based on start and end times
     const container = $("#container");
     container.html("");
     for (let i = start; i <= end; i++) {
+        // i represents the time, loops over creating time blocks
       container.append(`
       <div id="hour-${i}" class="row time-block">
       <div class="col-2 col-md-1 hour text-center py-3">${dayjs()
@@ -59,9 +68,10 @@ function initTimeDivs(start, end) {
 const initTimeClases = () => {
     const timeBlocks = $("#container").children();
 
-    const timeNow = dayjs().hour();
+    const timeNow = dayjs().hour(); // Current hour in 24 hour time
     timeBlocks.addClass(index=>{
-        const id = parseInt(timeBlocks[index].id.substring(5));
+        // Getting current time from each time block id.
+        const id = parseInt(timeBlocks[index].id.substring(5)); // Substring removes 'hour-' from id
         if (id < timeNow) {
             return "past";
           }
@@ -76,8 +86,8 @@ const initTimeClases = () => {
 
 
 const initSaveButtons = () => {
+    // Creating event listeners for each button in the time blocks that save to local storage
     const timeBlocks = $("#container").children();
-
     timeBlocks.children("button").click((e) => {
         const parent = $(e.target).parent();
         const id = parent.prop("id");
@@ -87,6 +97,7 @@ const initSaveButtons = () => {
 }
 
 const initSavedEvents = () => {
+    // Adds saved events to each text area
     const timeBlocks = $("#container").children();
 
     timeBlocks.children("textarea").val((index) => {
@@ -97,12 +108,13 @@ const initSavedEvents = () => {
 }
 
 const saveEventToLocalStorage = (data, id) => {
+    // Saving events
     let newData;
     const ls = JSON.parse(localStorage.getItem("data"));
     if (ls) {
       const entryExits = ls.find((entry) => {
         return entry.id === id;
-      });
+      }); // Checks if entry already exists for the timeblock and updates it
       if (entryExits) {
         newData = ls.map((entry) => {
           if (entry.id === id) {
@@ -120,6 +132,7 @@ const saveEventToLocalStorage = (data, id) => {
   };
 
   const getEventFromLocalStorage = (id) => {
+    // Find event based on id, if not found returns empty string
     const ls = JSON.parse(localStorage.getItem("data"));
     let data = "";
     if (ls) {
@@ -134,9 +147,11 @@ const saveEventToLocalStorage = (data, id) => {
   };
 
   const saveTimesToLocalStorage = (start, end) => {
+    // Saves default times to local storage
     localStorage.setItem('times', JSON.stringify({start, end}))
   }
   const getTimesFromLocalStorage = () => {
+    // Gets default times from local storage
     const times = JSON.parse(localStorage.getItem('times'))
     if (times){
       return times;
