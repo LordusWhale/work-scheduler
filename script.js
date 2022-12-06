@@ -1,12 +1,37 @@
 $(function () {
-    init();
+    let start = 9;
+    let end = 18;
+  
+    const startTime = $('#select1');
+    const endTime = $('#select2');
+  
+    const savedTimes = getTimesFromLocalStorage();
+    if (savedTimes){
+      startTime.val(savedTimes.start);
+      endTime.val(savedTimes.end);
+      start = savedTimes.start;
+      end = savedTimes.end;
+    }
+  
+    const onTimeChange = () => {
+      const start = parseInt(startTime.val());
+      const end = parseInt(endTime.val());
+      if (start > end) return;
+      saveTimesToLocalStorage(start, end)
+      init(start, end);
+    }
+    startTime.change(onTimeChange);
+    endTime.change(onTimeChange)
+
+
+    init(start, end);
 });
 
 
 
 
-function init() {
-    initTimeDivs(9, 18);
+function init(startTime, endTime) {
+    initTimeDivs(startTime, endTime);
     initTimeClases();
     initSaveButtons();
     initSavedEvents();
@@ -107,3 +132,14 @@ const saveEventToLocalStorage = (data, id) => {
     }
     return data;
   };
+
+  const saveTimesToLocalStorage = (start, end) => {
+    localStorage.setItem('times', JSON.stringify({start, end}))
+  }
+  const getTimesFromLocalStorage = () => {
+    const times = JSON.parse(localStorage.getItem('times'))
+    if (times){
+      return times;
+    }
+    return null;
+  }
