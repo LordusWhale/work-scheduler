@@ -23,7 +23,7 @@ $(function () {
     startTime.change(onTimeChange);
     endTime.change(onTimeChange)
 
-
+    $("#currentDay").text(`${dayjs().format("dddd, MMMM Do")}`);
     init(start, end);
 });
 
