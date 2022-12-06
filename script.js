@@ -1,8 +1,34 @@
 $(function () {
+    init();
+});
+
+
+
+
+function init() {
+    initTimeDivs(9, 18);
     initTimeClases();
     initSaveButtons();
     initSavedEvents();
-});
+}
+
+
+function initTimeDivs(start, end) {
+    const container = $("#container");
+    container.html("");
+    for (let i = start; i <= end; i++) {
+      container.append(`
+      <div id="hour-${i}" class="row time-block">
+      <div class="col-2 col-md-1 hour text-center py-3">${dayjs()
+        .hour(i)
+        .format("h A")}</div>
+      <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
+      <button class="btn saveBtn col-2 col-md-1" aria-label="save">
+        <i class="fas fa-save" aria-hidden="true"></i>
+      </button>
+    </div>`);
+    }
+  }
 
 
 const initTimeClases = () => {
