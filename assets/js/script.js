@@ -34,7 +34,12 @@ $(function () {
     init(start, end);
 });
 
+const showSuccessMessage = async () => {
 
+  $('#success').text('Saved to localstorage!')
+  await new Promise(r=>setTimeout(r, 2000));
+  $('#success').text('');
+}
 
 
 function init(startTime, endTime) {
@@ -88,10 +93,11 @@ const initTimeClases = () => {
 const initSaveButtons = () => {
     // Creating event listeners for each button in the time blocks that save to local storage
     const timeBlocks = $("#container").children();
-    timeBlocks.children("button").click((e) => {
+    timeBlocks.children("button").click(async (e) => {
         const parent = $(e.target).parent();
         const id = parent.prop("id");
         const textValue = parent.children("textarea").val();
+        await showSuccessMessage();
         saveEventToLocalStorage(textValue, id);
       });
 }
